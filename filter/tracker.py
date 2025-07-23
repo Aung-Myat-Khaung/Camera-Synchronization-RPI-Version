@@ -7,6 +7,7 @@ class Kalman_tracker:
         self.id = id
         self.tracker = cv2.TrackerKCF_create()
         self.bbox = bbox
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
         self.tracker.init(frame,self.bbox)
         x,y,w,h = self.bbox
         self.kf = Kalman_filter(x+w/2,y+h/2)
@@ -19,10 +20,12 @@ class Kalman_tracker:
         self.tracker = cv2.TrackerKCF_create()
         x,y,w,h = box
         self.bbox = (x,y,w,h)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
         self.tracker.init(frame,self.bbox)
         self.misses = 0
     
     def update(self,frame):
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
         ok, bbox = self.tracker.update(frame)
         if ok:
             x,y,w,h = bbox

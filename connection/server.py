@@ -7,10 +7,12 @@ PORT = 5050
 
 class Sever_Com:
     def __init__(self):
-        with socket.create_server((HOST,PORT),reuse_port=False) as s:
+            server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            server.bind((HOST,PORT))
+            server.listen()
             print(f"[Listening] {HOST} : {PORT}")
             while True:
-                conn, addr = s.accept()
+                conn, addr = server.accept()
                 threading.Thread(target=self.handle,args=(conn,addr),daemon=True).start()
     def handle (self,conn,addr):
         with conn:
@@ -23,6 +25,7 @@ class Sever_Com:
                     "id": msg["id"],
                     "color": msg["color"]
                 }
+                print (available_ID)
 
                 
 
