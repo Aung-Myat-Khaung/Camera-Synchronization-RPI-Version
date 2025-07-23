@@ -3,7 +3,7 @@ import threading
 import time
 from picamera2 import Picamera2
 class Frame_Grabber():
-    def __init__(self,src = 0):
+    def __init__(self):
         self.cam = Picamera2()
         self.config = self.cam.create_video_configuration(main={"size": (640, 480)})
         self.cam.configure(self.config)
@@ -12,14 +12,13 @@ class Frame_Grabber():
         self.stopped = False
     
     def start(self):
-        self.cam.start
+        self.cam.start()
         threading.Thread(target=self.update, daemon=True).start()
     
     def update(self):
         while not self.stopped:
-            ret, f = self.cam.capture_array()
-            if not ret:
-                break
+            f = self.cam.capture_array()
+            
             with self.lock:
                 self.frame = f.copy()
             time.sleep(0)

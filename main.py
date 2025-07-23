@@ -49,7 +49,7 @@ def fuse_detections(hsv_queue, circle_queue):
     for cnt in contours:
         area = cv2.contourArea(cnt)
 
-        if area > 2100:
+        if area > 4500:
             for i, (x, y, r) in enumerate(circles):
                 if i in used_circ:
                     continue
@@ -62,14 +62,15 @@ def fuse_detections(hsv_queue, circle_queue):
     return bboxes
 
 
-stream = Frame_Grabber(1)
+stream = Frame_Grabber()
 stream.start()
 threading.Thread(target=Sever_Com,daemon=True).start()
 sc_width, sc_height, fps = stream.dimensions()
 
 trackers = []                         
 tracker_id = 0
-
+client = Client_Com(host=IP_ADDR["Main"]["addr"],port =IP_ADDR["Main"]["port"])
+client.send_camera_data(7,"green")
 
 hsv_queue = queue.Queue(maxsize=1)
 circle_queue = queue.Queue(maxsize=1)
@@ -78,7 +79,6 @@ while True:
     frame = stream.read_data()
     if frame is None or frame.size == 0:
         continue
-    frame = cv2.resize(frame, FRAME_SIZE)
     t1 = threading.Thread(target=hsv_mask, args=(frame, hsv_queue))
     t2 = threading.Thread(target=canny_hough, args=(frame, circle_queue))
     t1.start(); t2.start(); t1.join(); t2.join()

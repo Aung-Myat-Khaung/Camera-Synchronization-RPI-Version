@@ -13,5 +13,6 @@ class Client_Com:
                     "color": color,
                 }
                 json_helper.send_json(sock, packet)
+                print("Error")
         except Exception as e:
-            print(f"[Error] Failed to send data")  
+            print(f"[Error] Failed to send data {e}")  
