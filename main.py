@@ -62,7 +62,7 @@ def fuse_detections(hsv_queue, circle_queue):
     return bboxes
 
 
-stream = Frame_Grabber(1)
+stream = Frame_Grabber()
 stream.start()
 threading.Thread(target=Sever_Com,daemon=True).start()
 sc_width, sc_height, fps = stream.dimensions()
